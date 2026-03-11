@@ -1,0 +1,70 @@
+# Axolotl ORPO Config für 4B Uncensoring-Healing
+base_model: ./abliteration/abliterated_model   # Output aus Heretic Phase 1
+model_type: AutoModelForCausalLM
+tokenizer_type: AutoTokenizer
+
+chat_template: chatml              # Explizites Chat-Template für SOTA (Qwen nutzt ChatML)
+flash_attention: true              # SOTA Speed & VRAM Ersparnis
+
+load_in_8bit: false
+load_in_4bit: true                 # QLoRA für VRAM-Effizienz
+strict: false
+
+datasets:
+  - path: mlabonne/orpo-dpo-mix-40k
+    type: chatml.intel            # Präferenz-Format (Uncensoring)
+  - path: crownelius/Opus-4.6-Reasoning-3300x
+    type: alpaca                  # SFT-Format (Intelligence Booster)
+    field_instruction: Problem Statement
+    field_output: Solution
+    # Das 'Reasoning' wird hier oft in den Output gemischt oder als CoT genutzt
+
+val_set_size: 0.01
+output_dir: ./orpo_output
+
+sequence_len: 2048
+sample_packing: false
+pad_to_sequence_len: true
+
+adapter: lora
+lora_model_dir:
+lora_r: 64
+lora_alpha: 128
+lora_dropout: 0.05
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# ORPO-spezifisch (State-of-the-Art, ersetzt DPO)
+rl: orpo
+orpo_alpha: 0.1
+
+gradient_accumulation_steps: 4
+micro_batch_size: 2
+num_epochs: 1
+optimizer: paged_adamw_8bit
+lr_scheduler: cosine
+learning_rate: 5e-5
+train_on_inputs: false
+group_by_length: false
+
+bf16: true
+fp16: false
+tf32: true
+
+gradient_checkpointing: true
+early_stopping_patience:
+resume_from_checkpoint:
+logging_steps: 10
+warmup_steps: 50
+eval_steps: 200
+save_steps: 500
+
+# Wandb optional
+wandb_project: uncensor-healing
+wandb_run_id:

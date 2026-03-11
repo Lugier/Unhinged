@@ -1,0 +1,8 @@
+torch>=2.1.0
+transformers>=4.40.0
+datasets>=2.18.0
+tqdm
+accelerate
+heretic
+optuna
+huggingface_hub
