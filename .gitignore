@@ -1,0 +1,26 @@
+# Models and Large weights
+abliteration/abliterated_model/
+sft_merged_model/
+final_model/
+sft_output/
+orpo_output/
+last_run_prepared/
+
+# Logs and Data
+*.log
+*.jsonl
+*.json
+!adapter_config.json
+!config.json
+!processor_config.json
+!tokenizer_config.json
+
+# Specialized ignore for json files in configs if needed, but normally we want yaml
+# Actually, let's just ignore the big data files
+finetuning/openorca_mapped.jsonl
+
+# Python/System
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+.env
