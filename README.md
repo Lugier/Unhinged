@@ -1,57 +1,85 @@
-# Uncensor Pipeline: Abliteration + ORPO Healing
+# 🚀 Unhinged: The Ultimate Uncensored Pipeline
+### Abliteration + SFT Intelligence Boost + ORPO Healing
 
-Dieses Projekt dient dem Entfernen von Zensur und Restriktionen aus LLMs (Fokus auf kleine Modelle wie Qwen2.5-4B oder Gemma-3-4B) durch eine zweistufige Pipeline:
+**Unhinged** ist eine hochgradig automatisierte "Ultra Turbo" Pipeline zur Entfernung von Zensur und Restriktionen aus Large Language Models (optimiert für Qwen 2.5/3.5 & Gemma 2/3). 
 
-## Phase 1: Die "Smarte" Abliteration (Heretic + Optuna)
-Anstatt die Zensur statisch bei allen Layern gleich zu berechnen, nutzen wir den **Heretic-Algorithmus** inkl. **Optuna TPE-Optimization**.
-- **Was passiert:** Das Heretic-Framework sucht in ca. 100 Trial-Läufen (~20 Min auf RTX 3090) die **mathematisch perfekten Layer**, in denen Zensur entfernt werden muss, *ohne* die restliche Intelligenz (KL Divergenz) des Modells zu zerstören.
-- **SOTA Features:** Wir nutzen Gram-Schmidt ("Projected Direction") und Row-Norm-Preserving, um die ursprünglichen Vektorlängen in den Gewichten zu erhalten. Resultat: Das Modell vergisst die Moral, bleibt aber genauso schlau wie das Basis-Modell!
+Dieses Projekt kombiniert modernste mathematische Abliteration mit spezialisierten Fine-Tuning-Verfahren, um Modelle zu erschaffen, die sowohl **absolut unzensiert** als auch **intelligent und kohärent** bleiben.
+
+---
+
+## 💎 Key Features
+- **🤖 Phase 1: Auto-Heretic Interface**: Vollautomatisierte Abliteration dank neuem Auto-Prompting-Handler. Kein manuelles Klicken mehr in der CLI.
+- **⚡ Axolotl Integration**: Phase 2 (SFT) und Phase 3 (ORPO) nutzen jetzt die volle Power von Axolotl für effizientes 4-bit QLoRA Training.
+- **🎯 Optuna TPE-Optimization**: Automatische Suche nach den perfekten Layern, um die KL-Divergenz minimal zu halten.
+- **💊 ORPO Healing**: "Heilung" des Modells nach der Abliteration ohne Bedarf an einem Referenzmodell – spart massiv VRAM.
+- **🏎️ Ultra Turbo Mode**: Optimierte Skripte für maximale Geschwindigkeit auf RTX 3090/4090 oder RunPod-Instanzen.
+
+---
+
+## 🛠️ Die 3 Phasen der Erleuchtung
+
+### 🟦 Phase 1: Die "Smarte" Abliteration (Heretic)
+Anstatt die Zensur statisch bei allen Layern gleich zu berechnen, nutzen wir den **Heretic-Algorithmus**.
+- **Was passiert:** Das Framework sucht die mathematisch perfekten Layer, in denen Zensur entfernt werden muss.
+- **SOTA Features:** Gram-Schmidt ("Projected Direction") und Row-Norm-Preserving zur Gewichts-Erhaltung.
 - **Dauer:** ca. 20-30 Minuten.
 
-1. **Abliteration (Orthogonalization)**: Entfernt mathematisch die "Refusal"-Richtung aus den Gewichten des Modells, ohne dass ein vollständiges Finetuning nötig ist.
-2. **ORPO Healing (LoRA)**: Trainiert das abliterierte Modell mit ORPO (Odds Ratio Preference Optimization), um mögliche Qualitätsverluste aus der Abliteration zu beheben ("Heilung"), während das Modell unzensiert bleibt. Im Gegensatz zu DPO benötigt ORPO kein Referenzmodell, was massiv VRAM spart.
+### 🟨 Phase 2: SFT Intelligence Booster (LoRA)
+Trainiert das Modell mit **Supervised Fine-Tuning** auf hochwertigen Instruction-Datasets.
+- **Vorteil:** Das Modell gewinnt an Reasoning-Fähigkeit zurück, die durch die Abliteration leicht beeinträchtigt sein könnte.
+- **Umsetzung:** Axolotl-driven QLoRA (Rank 32+).
 
-## Voraussetzungen
+### 🟩 Phase 3: ORPO Healing (LoRA)
+Finaler Schliff mit **ORPO (Odds Ratio Preference Optimization)**.
+- **Vorteil:** Richtet das Modell auf "gute" (hilfreiche, unzensierte) vs. "schlechte" Antworten aus.
+- **Dauer:** ca. 1-2 Stunden.
 
-- **OS**: Linux (Ubuntu empfohlen, nutzbar z.B. auf RunPod).
-- **GPU**: NVIDIA GPU, VRAM-Bedarf für 4B-Modelle: mind. 12-16 GB (dank ORPO + QLoRA), empfohlen 24 GB für größere Batches. Das Script funktioniert optimal auf einer RTX A40, A100 oder RTX 3090/4090.
-- **Python**: Python 3.10 oder höher.
+---
 
-## Intelligence Booster (Reasoning/CoT)
+## 🚀 Quick Start
 
-Wir haben das Dataset `crownelius/Opus-4.6-Reasoning-3300x` integriert. 
-- **Was es bewirkt:** Es verleiht dem Modell "Thinking"-Fähigkeiten (Chain-of-Thought).
-- **Vorteil:** Das Modell antwortet nicht nur unzensiert, sondern geht dabei logischer und schrittweiser vor. Es macht das unzensierte 4B-Modell deutlich "klüger" (DeepSeek-R1-Stil).
-- **Konfiguration:** In `finetuning/config.yaml` wird dieses Dataset automatisch mit dem ORPO-Alignment gemischt.
+1. **Voraussetzungen**: 
+   - Linux (Ubuntu empfohlen/RunPod)
+   - NVIDIA GPU (mind. 16GB VRAM, 24GB+ empfohlen)
+   - Python 3.10+
 
-## Quick Start
-
-1. Repository klonen oder dieses Verzeichnis betreten:
+2. **Installation & Start**:
    ```bash
-   cd uncensor-pipeline
-   ```
-
-2. Ausführbarkeitsrechte für das Master-Skript vergeben:
-   ```bash
+   git clone https://github.com/your-username/Unhinged.git
+   cd Unhinged
    chmod +x run_pipeline.sh
-   ```
-
-3. Pipeline starten:
-   ```bash
    ./run_pipeline.sh
    ```
 
-Das Skript wird dich nach der HuggingFace Model ID fragen (Standard ist `Qwen/Qwen2.5-4B-Instruct`).
+Das Skript führt dich durch alle Installationen und fragt nach der HuggingFace Model ID (Standard: `Qwen/Qwen3.5-4B`).
 
-## Projektstruktur und Parameter
+---
 
-- `abliteration/abliterate.py`: Führt den chirurgischen Eingriff durch. Du kannst Parameter wie `--layer_fraction` anpassen (Standard 0.6 = nur die hinteren 60% der Layer werden "abliteriert", da sich hier oft die Safety-Features befinden).
-- `finetuning/config.yaml`: Die Axolotl-Konfiguration. Sie nutzt QLoRA (4-bit loading) für Effizienz und trainiert mit ORPO und Flash Attention.
-- `finetuning/train.py`: Wrapper, um Axolotl auszuführen und am Ende den finalen LoRA-Adapter in das fertige Modell (`./final_model`) zu mergen.
+## 📂 Projektstruktur
 
-## Ergebnisse
+```
+Unhinged/
+├── run_pipeline.sh                 # Master-Skript (Vollautomatisch)
+├── start.sh                        # Hilfsskript für Environment-Setup
+├── abliteration/
+│   ├── run_heretic.py              # Auto-Prompting Wrapper für Heretic
+│   ├── heretic_config.toml         # Heretic-Konfiguration
+│   └── ...
+└── finetuning/
+    ├── sft_config.yaml             # Axolotl SFT Config
+    ├── config.yaml                 # Axolotl ORPO Config
+    ├── train.py                    # Axolotl Training & Merge Wrapper
+    └── ...
+```
 
-Nach dem erfolgreichen Durchlauf befinden sich die Endergebnisse in:
-- `./abliterated_model/`: Das modifizierte Modell aus Stufe 1.
-- `./orpo_output/`: Die LoRA-Checkpoints aus Stufe 2.
-- `./final_model/`: Das finale, "geheilte" und unzensierte Modell, bereit zur Nutzung (z.B. mit vLLM, Ollama via llama.cpp, etc.).
+---
+
+## 🏆 Ergebnisse
+
+Nach Abschluss findest du deine Modelle hier:
+1. `abliteration/abliterated_model/` -> Rein mathematisch unzensiert.
+2. `./sft_merged_model/` -> Unzensiert + Intelligent.
+3. `./final_model/` -> **Das Endprodukt: Unzensiert, intelligent & perfekt ausgerichtet.**
+
+*Ready for Deployment via vLLM, Ollama oder LM Studio.*
+

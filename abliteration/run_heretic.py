@@ -2,27 +2,61 @@ import sys
 from unittest.mock import patch
 import heretic.main
 
+def _normalize_message(message):
+    return (message or "").strip().lower()
+
+
+def _first_choice_value(choices):
+    if not choices:
+        raise RuntimeError("Heretic hat keine auswaehlbaren Trials geliefert.")
+    return choices[0].value
+
+
 def auto_prompt_select(message, choices=None, **kwargs):
-    if "Which trial do you want to use" in message:
-        # We always want the numerically best trial which is the first one presented
-        return choices[0].value
-    elif "What do you want to do" in message:
-        # If we haven't saved yet, save. Otherwise return.
-        if not hasattr(auto_prompt_select, "saved"):
-            auto_prompt_select.saved = True
+    normalized = _normalize_message(message)
+    print(f"[AUTO-PROMPT] Select: {message!r}")
+    
+    if "trial" in normalized and "use" in normalized:
+        return _first_choice_value(choices)
+    elif "what do you want to do with the decensored model" in normalized:
+        # State machine to save once then return
+        if not hasattr(auto_prompt_select, "saved_flag"):
+            auto_prompt_select.saved_flag = True
+            print("[AUTO-PROMPT] Triggering Save...")
             return "Save the model to a local folder"
+        print("[AUTO-PROMPT] Already saved, returning to menu...")
         return "Return to the trial selection menu"
-    elif "How do you want to proceed" in message:
-        return "merge"
-    elif "Select a trial" in message:
-        # If it asks this instead, it means the Pareto front choices are presented
-        return choices[0].value if choices else ""
-    return None
+    elif "how would you like to proceed" in normalized or "how do you want to proceed" in normalized:
+        # This can be the resume prompt OR the merge strategy prompt
+        if choices and any("merge" in c.title.lower() for c in choices):
+            print("[AUTO-PROMPT] Selecting 'Merge' strategy...")
+            for c in choices:
+                if "merge" in c.title.lower(): return c.value
+        
+        # Resume prompt handling
+        if choices and len(choices) > 1 and "scratch" in choices[1].title.lower():
+            print("[AUTO-PROMPT] Starting from scratch as requested...")
+            return choices[1].value
+        return _first_choice_value(choices)
+    elif "select a trial" in normalized or "pareto" in normalized:
+        return _first_choice_value(choices)
+    elif "what do you want to do" in normalized:
+        # Main menu after trial selection
+        if not hasattr(auto_prompt_select, "done_it"):
+            auto_prompt_select.done_it = True
+            return _first_choice_value(choices) # Usually 'Pick a trial' or similar
+        return "Quit"
+
+    if choices:
+        return _first_choice_value(choices)
+    raise RuntimeError(f"Unbekannter Heretic-Auswahldialog: {message!r}")
 
 def auto_prompt_path(message, **kwargs):
-    if "Path to the folder" in message:
+    print(f"[AUTO-PROMPT] Path: {message!r}")
+    normalized = _normalize_message(message)
+    if "path" in normalized and "folder" in normalized:
         return "abliterated_model"
-    return ""
+    return "abliterated_model"
 
 def auto_prompt_text(message, **kwargs):
     return ""
